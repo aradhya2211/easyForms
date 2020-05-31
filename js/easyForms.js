@@ -1,3 +1,5 @@
+//Version 1.00
+//GitHubPath: github.com/aradhya2211/easyForms
 class easyForms{
     constructor(divName, NewId, Frm, title){
         this.formDiv = Frm;

@@ -1,0 +1,66 @@
+<html>
+    <head>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+    </head>
+    <body>
+        <form id="Form">
+            <div id="Contacts" class="container row">
+                <!--Form Section-->
+            </div>
+        </form>
+        <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+        <script type="text/javascript" src="js/materialize.js"></script>
+        <script type="text/javascript" src="js/easyForms.js"></script>
+        <script>
+           document.addEventListener('DOMContentLoaded', function() {
+              
+             });
+           
+            var formController = new easyForms('Contacts', 'ContactInfo', 'Form', 'Contact Information');
+            var InputFields = formController.addArrTextInput(
+                'contactInfo',
+                [
+                    'John Wick',
+                    'abc@xyz.com',
+                    '+91 99###',
+                    'Company Pvt Ltd'
+                ],
+                'text',
+                [
+                    'Name',
+                    'Email ID',
+                    'Phone',
+                    'Company'
+                ],
+                'col m6 s12'
+            );
+            var comments = formController.addTextInput(
+                'comments',
+                'Your valuable comments...',
+                'text',
+                'Comments',
+                'col m12 s12'
+            );
+            var submitButton = formController.addSubmitButton(
+                'subBut',
+                'Submit Now!',
+                'send',
+                'col m12 s12 right-align'
+            );
+            var checBoxData = formController.addArrCheckbox(
+                'checkBox',
+                [
+                    'Do you want to subscribe to our mail?',
+                    'Do you Agree to our terms?'
+                ],
+                'col m6 s12' );
+            submitButton.onclick = function(){
+                console.log(formController.getAllData());
+                console.log('Name is '+InputFields[0].value)
+            }
+            
+            
+        </script>
+    </body>
+</html>

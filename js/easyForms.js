@@ -216,6 +216,3 @@ class easyForms{
     }
         
 }
-$(document).ready(function(){
-    $('select').formSelect();
-});

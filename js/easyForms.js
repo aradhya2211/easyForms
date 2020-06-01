@@ -158,6 +158,44 @@ class easyForms{
         $('#'+this.workingDiv).append(query);
         this.addIdData(id, 'html');
     }
+    getCheckboxValue(id){
+        return id.checked;
+    }
+    getSelectMultipleValues(id){
+        var elems = id;
+        var instance = M.FormSelect.getInstance(elems);
+        return instance.getSelectedValues();
+    }
+    getValue(id){
+        var retData;
+        switch(id.type){
+            case 'checkbox': 
+                retData = this.getCheckboxValue(id);
+                break;
+            case 'select-multiple':
+                retData = this.getSelectMultipleValues(id);
+                break;
+            default:
+                retData = id.value;
+        }
+        return retData;
+
+    }
+    isFormComplete(){
+        var allData = this.getId();
+        var ret = true;
+        allData.forEach(
+            item => {
+                var obj = document.getElementById(item.id);
+
+                if(obj.required == true){
+                    if(this.getValue(obj) == '')    
+                        ret = false;
+            }
+        }
+        );
+        return ret;
+    }
     getAllData(){
         var allData = this.getId();
         //console.log(allData);
@@ -165,22 +203,19 @@ class easyForms{
         for(var i=0; i< allData.length; i++){
             switch(allData[i].type){
                 case 'checkbox':
-                    retObj[allData[i].id]=document.getElementById(allData[i].id).checked;
+                    retObj[allData[i].id]=this.getCheckboxValue(document.getElementById(allData[i].id));
                     break;
                 case 'selectMulti':
-                    var elems = document.getElementById(allData[i].id);
-                    var instance = M.FormSelect.getInstance(elems);
-                    retObj[allData[i].id]=instance.getSelectedValues();
+                    retObj[allData[i].id]=this.getSelectMultipleValues(document.getElementById(allData[i].id));
                     break;
                 case 'button':
                     break;
                 case 'html':
                     break;
                 default:
-                    retObj[allData[i].id]=document.getElementById(allData[i].id).value;
+                    retObj[allData[i].id]=this.getValue(document.getElementById(allData[i].id));
 
             }
-            //retObj[allData[i].id]=document.getElementById(allData[i].id).value;
         }
         return retObj;
     }

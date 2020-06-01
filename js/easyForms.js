@@ -45,7 +45,6 @@ class easyForms{
         return this.idData;
     }
     requires(obj){
-        console.log(typeof(obj))
        if(obj.length > 0)
         for(var i = 0; i< obj.length; i++)
             obj[i].required = true;

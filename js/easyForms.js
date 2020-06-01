@@ -1,5 +1,3 @@
-//Version 1.00
-//GitHubPath: github.com/aradhya2211/easyForms
 class easyForms{
     constructor(divName, NewId, Frm, title){
         this.formDiv = Frm;
@@ -36,7 +34,7 @@ class easyForms{
                 index = i;
             }
         }
-       // console.log(index);
+      // console.log(index);
         if(index>=0){
             var elmnt = document.getElementById(el).parentNode.parentNode;
             elmnt.remove();
@@ -46,7 +44,14 @@ class easyForms{
     getAllId(){
         return this.idData;
     }
-
+    requires(obj){
+        console.log(typeof(obj))
+       if(obj.length > 0)
+        for(var i = 0; i< obj.length; i++)
+            obj[i].required = true;
+        else 
+            obj.required = true;
+            }
     addSelect(id, arr, varr, label, css){
         var query;
         query = '<div class="'+css+'"><div class="input-field"><select id='+id+'><option value="" disabled selected>Choose your option</option>';
@@ -74,7 +79,6 @@ class easyForms{
         }
         
     }
-
     addSelectMultiple(id, arr, varr, label, css){
         var query;
         query = '<div class="input-field '+css+'"><select id='+id+' multiple><option value="" disabled >Choose your option</option>';

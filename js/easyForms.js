@@ -202,12 +202,7 @@ class easyForms{
         var retObj = new Object;   
         for(var i=0; i< allData.length; i++){
             switch(allData[i].type){
-                case 'checkbox':
-                    retObj[allData[i].id]=this.getCheckboxValue(document.getElementById(allData[i].id));
-                    break;
-                case 'selectMulti':
-                    retObj[allData[i].id]=this.getSelectMultipleValues(document.getElementById(allData[i].id));
-                    break;
+                
                 case 'button':
                     break;
                 case 'html':

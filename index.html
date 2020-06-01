@@ -35,13 +35,7 @@
                 ],
                 'col m6 s12'
             );
-            var comments = formController.addTextInput(
-                'comments',
-                'Your valuable comments...',
-                'text',
-                'Comments',
-                'col m12 s12'
-            );
+            
             var submitButton = formController.addSubmitButton(
                 'subBut',
                 'Submit Now!',
@@ -54,7 +48,25 @@
                     'Do you want to subscribe to our mail?',
                     'Do you Agree to our terms?'
                 ],
-                'col m6 s12' );
+                'col m4 s12' );
+            formController.addSection('Sep', '<div class="col m12"><hr></div>');
+             var extraComments = formController.addCheckbox('extraComments', 'I have something more to say!', 'col s12 m12');
+             var comments = new Object;
+             extraComments.onchange = function(){
+                 if(extraComments.checked == true){
+                comments = formController.addTextInput(
+                'comments',
+                '',
+                'text',
+                'I have to say that...',
+                'col m12 s12'
+            );
+                 }
+                 else if(comments=!null)
+                 {
+                     formController.removeEl('comments');
+                 }
+             }
             submitButton.onclick = function(){
                 console.log(formController.getAllData());
                 console.log('Name is '+InputFields[0].value)

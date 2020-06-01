@@ -42,14 +42,30 @@
                 'send',
                 'col m12 s12 right-align'
             );
+            var options = formController.addSelectMultiple(
+                'MultiSelect',
+                [
+                    'Coffee',
+                    'Sandwhich',
+                    'Fruit Salad'
+                ],
+                [
+                    1,
+                    2,
+                    3
+                ],
+                'Select your meals',
+                'col s12 m12'
+            );
             var checBoxData = formController.addArrCheckbox(
                 'checkBox',
                 [
                     'Do you want to subscribe to our mail?',
                     'Do you Agree to our terms?'
                 ],
-                'col m4 s12' );
-            formController.addSection('Sep', '<div class="col m12"><br><br><h6>Extra Comments</h6><hr></div>');
+                'col m6 s12' );
+            formController.addSection('terms', '<div class="col m12 right-align"><a href="#terms">Read Terms</a></div>', 'col s12 m12')
+            formController.addSection('Sep', '<div class="col m12"><br><br><h6>Extra Comments(Optional)</h6><hr></div>', 'col s12 m12');
              var extraComments = formController.addCheckbox('extraComments', 'I have something more to say!', 'col s12 m12');
              var comments = new Object;
              extraComments.onchange = function(){
@@ -69,8 +85,10 @@
                  }
              }
             submitButton.onclick = function(){
-                console.log(formController.getAllData());
-                console.log('Name is '+InputFields[0].value)
+                   console.log(formController.getAllData());
+                   console.log('Name is '+InputFields[0].value)
+                   console.log(formController.getValue(options));
+                   console.log(formController.isFormComplete());
             }
             
         </script>

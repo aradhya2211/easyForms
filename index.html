@@ -35,7 +35,7 @@
                 ],
                 'col m6 s12'
             );
-            
+            formController.requires(InputFields);
             var submitButton = formController.addSubmitButton(
                 'subBut',
                 'Submit Now!',
@@ -61,6 +61,7 @@
                 'I have to say that...',
                 'col m12 s12'
             );
+            formController.requires(comments);
                  }
                  else if(comments=!null)
                  {
@@ -71,7 +72,6 @@
                 console.log(formController.getAllData());
                 console.log('Name is '+InputFields[0].value)
             }
-            
             
         </script>
     </body>

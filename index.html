@@ -4,91 +4,177 @@
         <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
     </head>
     <body>
-        <form id="Form">
-            <div id="Contacts" class="container row">
-                <!--Form Section-->
+        <form id="cafe">
+            <div class="row container">
+
+                <div id="order" class="row container col m6 s12">
+
+                </div>
+                <div class ="col m6 s12 blue lighten-5">'
+                    <h5>Orders</h5><h7>Your orders will be displayed here...</h7>
+                    <div id="cart" class="row container ">
+                        
+                    </div>
+                </div>
+                
             </div>
+            
+        
+            
         </form>
+        
         <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
         <script type="text/javascript" src="js/materialize.js"></script>
         <script type="text/javascript" src="js/easyForms.js"></script>
         <script>
-           document.addEventListener('DOMContentLoaded', function() {
-              
-             });
-           
-            var formController = new easyForms('Contacts', 'ContactInfo', 'Form', 'Contact Information');
-            var InputFields = formController.addArrTextInput(
-                'contactInfo',
-                [
-                    'John Wick',
-                    'abc@xyz.com',
-                    '+91 99###',
-                    'Company Pvt Ltd'
-                ],
-                'text',
-                [
-                    'Name',
-                    'Email ID',
-                    'Phone',
-                    'Company'
-                ],
-                'col m6 s12'
-            );
-            formController.requires(InputFields);
-            var submitButton = formController.addSubmitButton(
-                'subBut',
-                'Submit Now!',
-                'send',
-                'col m12 s12 right-align'
-            );
-            var options = formController.addSelectMultiple(
-                'MultiSelect',
-                [
-                    'Coffee',
-                    'Sandwhich',
-                    'Fruit Salad'
-                ],
-                [
-                    1,
-                    2,
-                    3
-                ],
-                'Select your meals',
-                'col s12 m12'
-            );
-            var checBoxData = formController.addArrCheckbox(
-                'checkBox',
-                [
-                    'Do you want to subscribe to our mail?',
-                    'Do you Agree to our terms?'
-                ],
-                'col m6 s12' );
-            formController.addSection('terms', '<div class="col m12 right-align"><a href="#terms">Read Terms</a></div>', 'col s12 m12')
-            formController.addSection('Sep', '<div class="col m12"><br><br><h6>Extra Comments(Optional)</h6><hr></div>', 'col s12 m12');
-             var extraComments = formController.addCheckbox('extraComments', 'I have something more to say!', 'col s12 m12');
-             var comments = new Object;
-             extraComments.onchange = function(){
-                 if(extraComments.checked == true){
-                comments = formController.addTextInput(
-                'comments',
-                '',
-                'text',
-                'I have to say that...',
-                'col m12 s12'
-            );
-            formController.requires(comments);
-                 }
-                 else if(comments=!null)
-                 {
-                     formController.removeEl('comments');
-                 }
-             }
-            submitButton.onclick = function(){
-                   console.log(formController.getAllData());
-                   console.log('Name is '+InputFields[0].value)
-                   console.log(formController.getValue(options));
-                   console.log(formController.isFormComplete());
+            beverageOptions = ['Tea', 'Coffee'];
+            teaTypes = ['Hot Tea', 'Ginger Tea', 'Black Tea', 'Masala Tea'];
+            teaOptions = ['Sugar', 'Cream', 'Cardamom', 'Lemon'];
+            contactLabels = ['Name','Contact Number'];
+            subCSS = 'col m11 s11 offset-m1 offset-s1';
+            bevQuality = ['Strong', 'Smooth', 'Light'];
+            coffeeTypes = ['Capuccino', 'Latte', 'Mocha'];
+            coffeeOptions = ['Sugar', 'Chocolate', 'Cream']
+
+
+            var formControl = new easyForms({
+                id: 'menu',
+                title: 'Cafe Menu',
+                form: 'cafe',
+                parent: 'order'
+            });
+            var add = formControl.addSubmitButton({
+                id:'add',
+                icon:'add',
+                text:'add',
+                css:'btn-floating green',
+                wrapperCSS:'right-align col m12 s12'
+            });
+            
+            var beverage = formControl.addSelect({
+                id:'beverage',
+                options:beverageOptions,
+                valueArr:beverageOptions,
+                label: 'Select your drink!',
+                css: 'col s12 m12 grey lighten-2'
+
+            });
+            add.onclick=addItem;
+            function addItem(){
+                var heading = beverage.value;
+                if(beverage.value!='null' && formControl.isFormComplete()==true){
+                formControl.addToCart();
+                console.log(formControl.getCart());
+                formControl.updateCart({
+                    css:'col s12 m6',
+                    heading:'beverage',
+                    parent:'cart',
+                    desc: [
+                        'sub-selection',
+                        'Contact0'
+                    ]
+                });
+                }
+                else
+                    alert('Complete Selection!')
+            }
+            
+            beverage.onchange = function(){
+                formControl.removeAllExcept(beverage.id);
+                switch(beverage.value){
+                    case 'Tea':
+                        selectTea();
+                        break;
+                    case 'Coffee':
+                        selectCoffee();
+                        break;
+                    default:
+                }
+            function selectCoffee(){
+                var subSelection = formControl.addSelect({
+                    id:'sub-selection',
+                    options: coffeeTypes,
+                    valueArr: coffeeTypes,
+                    label:'Select your tea',
+                    css:subCSS
+                });
+                var coffeeAddOns = formControl.addSelectMultiple({
+                    id:'addons',
+                    options: coffeeOptions,
+                    valueArr: 0,
+                    label:'Add Ons',
+                    css:subCSS
+                });
+                var quality = formControl.addArrCheckbox({
+                    id:'quality',
+                    css:'col s11 offset-s1 m3 offset-m1',
+                    label:bevQuality
+                });
+                var comments = formControl.addTextInput({
+                    id:'Comments',
+                    css:subCSS,
+                    label:'Special Instructions(Optional)',
+                    type:'text',
+                });
+                var contactDetails = formControl.addArrTextInput({
+                    id:'Contact',
+                    css: 'col s11 m4 offset-m1 offset s1',
+                    labelArr:contactLabels,
+                    typeArr:'text'
+                });
+                var takeAway = formControl.addCheckbox({
+                    id:'take-away',
+                    css:subCSS,
+                    label:'I want a take away'
+                });
+                formControl.requires([
+                    contactDetails[0],
+                    subSelection
+                    ]);
+            }
+        
+             function selectTea(){
+                var subSelection = formControl.addSelect({
+                    id:'sub-selection',
+                    options: teaTypes,
+                    valueArr: teaTypes,
+                    label:'Select your tea',
+                    css:subCSS
+                });
+                var teaAddOns = formControl.addSelectMultiple({
+                    id:'addons',
+                    options: teaOptions,
+                    valueArr: 0,
+                    label:'Add Ons',
+                    css:subCSS
+                });
+                var quality = formControl.addArrCheckbox({
+                    id:'quality',
+                    css:'col s11 offset-s1 m3 offset-m1',
+                    label:bevQuality
+                });
+                var comments = formControl.addTextInput({
+                    id:'Comments',
+                    css:subCSS,
+                    label:'Special Instructions(Optional)',
+                    type:'text',
+                });
+                var contactDetails = formControl.addArrTextInput({
+                    id:'Contact',
+                    css: 'col s11 m4 offset-m1 offset s1',
+                    labelArr:contactLabels,
+                    typeArr:'text'
+                });
+                var takeAway = formControl.addCheckbox({
+                    id:'take-away',
+                    css:subCSS,
+                    label:'I want a take away'
+                });
+                formControl.requires([
+                    contactDetails[0],
+                    subSelection
+                ]);
+                }
             }
             
         </script>

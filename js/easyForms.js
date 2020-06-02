@@ -195,7 +195,7 @@ class easyForms{
         this.itemsInCart.forEach((item, i) => {
             this.addSection({
                 css: params.css,
-                html: '<h6>'+item[heading]+'</h6><h7>'+item[desc[0]]+'</h7><br>'+item[desc[1]],
+                html: '<h6>'+(i+1)+'. '+item[heading]+'</h6><h5>'+item[desc[0]]+'</h5>'+item[desc[1]],
                 id: 'cart'+i,
                 parent: params.parent
             });

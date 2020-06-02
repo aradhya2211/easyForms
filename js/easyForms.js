@@ -1,9 +1,18 @@
+//Version 1.01
 class easyForms{
-    constructor(divName, NewId, Frm, title){
-        this.formDiv = Frm;
-        this.workingDiv = NewId;
-        $('#'+divName).append('<div class="col s12 m12"><h5>'+title+'</h5></div><div id='+NewId+' class="col s12 m12"><hr></div><div id="'+NewId+'-footer" class="center-align"></div>');
+    constructor(params){
+        this.formDiv = params.form;
+        this.workingDiv = params.id;
+        $('#'+params.parent).append('<div class="col s12 m12"><h5>'+params.title+'</h5></div><div id='+params.id+' class="col s12 m12"><hr></div><div id="'+params.id+'-footer" class="center-align"></div>');
         this.idData = new Array;
+        this.itemsInCart = new Array;
+        this.delCartItemButtons = new Array;
+    }
+    getCart(){
+        return this.itemsInCart;
+    }
+    removeFromCart(params){
+        this.cart.splice(params.index,1);
     }
     getId(){
         return this.idData;
@@ -51,112 +60,109 @@ class easyForms{
         else 
             obj.required = true;
             }
-    addSelect(id, arr, varr, label, css){
+    addSelect(params){
         var query;
-        query = '<div class="'+css+'"><div class="input-field"><select id='+id+'><option value="" disabled selected>Choose your option</option>';
-        for(var i=0; i<arr.length; i++){
-            query += '<option value="'+varr[i]+'">'+arr[i]+'</option>';
+        query = '<div class="'+params.css+'"><div class="input-field"><select id='+params.id+'><option value=null disabled selected>Choose your option</option>';
+        for(var i=0; i<params.options.length; i++){
+            var value;
+            value=params.valueArr.length>0?params.valueArr[i]:i;
+            query += '<option value="'+value+'">'+params.options[i]+'</option>';
             }
-        query += '</select><label>'+label+'</label></div></div>';
+        query += '</select><label>'+params.label+'</label></div></div>';
         //console.log(query);
        $('#'+this.workingDiv).append(query);
-       this.addIdData(id, 'select');
+       this.addIdData(params.id, 'select');
        $('select').formSelect();
-       return document.getElementById(id);
+       return document.getElementById(params.id);
         }
-    addArrSelect(preFixId, arrarr, arrvarr, labelArr, cssArr){
-        if(typeof(cssArr)=='object'){
-            for(var i = 0; i< arrarr.length; i++){
-                this.addSelect(preFixId+i, arrarr[i],arrvarr[i],labelArr[i], cssArr[i]);
-                }
-        }
-        else
-        {
-            for(var i = 0; i< arrarr.length; i++){
-                this.addSelect(preFixId+i, arrarr[i],arrvarr[i],labelArr[i], cssArr);
-                }
-        }
-        
-    }
-    addSelectMultiple(id, arr, varr, label, css){
+    
+    addSelectMultiple(params){
         var query;
-        query = '<div class="input-field '+css+'"><select id='+id+' multiple><option value="" disabled >Choose your option</option>';
-        for(var i=0; i<arr.length; i++){
-            query += '<option value="'+varr[i]+'">'+arr[i]+'</option>';
+        query = '<div class="input-field '+params.css+'"><select id='+params.id+' multiple><option value="" disabled >Choose your option</option>';
+        for(var i=0; i<params.options.length; i++){
+            var value;
+            params.valueArr.length>0?value=params.valueArr[i]:i;
+            query += '<option value="'+value+'">'+params.options[i]+'</option>';
             }
-        query += '</select><label>'+label+'</label></div>';
-        //console.log(query);
+        query += '</select><label>'+params.label+'</label></div>';
            $('#'+this.workingDiv).append(query);
-           this.addIdData(id, 'selectMulti');
+           this.addIdData(params.id, 'selectMulti');
            $('select').formSelect();
-           return document.getElementById(id);
+           return document.getElementById(params.id);
         }
-    addTextInput(id, placeholder, type, label, css){
-        var query;
-        query = ' <div><div class="input-field '+css+'"><input placeholder="'+placeholder+'" id="'+id+'" type="'+type+'" class="validate"><label for="'+id+'">'+label+'</label></div>';
+    addTextInput(params){
+        var query, ph;
+        ph = params.placeholder==null?'':params.placeholder
+        query = ' <div><div class="input-field '+params.css+'"><input placeholder="'+ph+'" id="'+params.id+'" type="'+params.type+'" class="validate"><label for="'+params.id+'">'+params.label+'</label></div>';
         //console.log(query);
         $('#'+this.workingDiv).append(query);
-        this.addIdData(id, 'text');
-        return document.getElementById(id);
+        this.addIdData(params.id, 'text');
+        return document.getElementById(params.id);
         }
-    addArrTextInput(idPreFix, placeholderArr, typeArr, labelArr, cssArr ){
+    addArrTextInput(params){
             var arrID = new Array;
-            for(var i = 0; i<labelArr.length; i++){
-                var type, css, placeholder;
-                if(typeof(typeArr) == 'object')
-                type = typeArr[i];
-                else
-                type = typeArr;
-                if(typeof(cssArr) == 'object')
-                css = cssArr[i];
-                else
-                css = cssArr;
-                typeof(placeholderArr)=='object'? placeholder = placeholderArr[i] : placeholder = placeholderArr;
-                arrID[i]=this.addTextInput(idPreFix+i,placeholder, typeArr, labelArr[i],css);
+            for(var i = 0; i<params.labelArr.length; i++){
+                var vtype, vcss, ph;
+                vtype=typeof(params.typeArr)=='object'?params.typeArr[i]:params.typeArr;
+                vcss=typeof(params.css)=='object'?params.css[i]:params.css;
+                ph = params.placeholder == null?'':params.placeholder.length>0?params.placeholder[i]:params.placeholder;
+                
+                arrID[i]=this.addTextInput({
+                    id:params.id+i,
+                    placeholder:ph, 
+                    type : vtype, 
+                    label:params.labelArr[i], 
+                    css:vcss
+                });
             }
             return arrID;
         
 
     }
-    addCheckbox(id, label, css){
+    addCheckbox(params){
         var query;
-        query = '<div class="'+css+'"><label> <input id="'+id+'" type="checkbox" /><span>'+label+'</span></label></div>'
+        query = '<div class="'+params.css+'"><label> <input id="'+params.id+'" type="checkbox" /><span>'+params.label+'</span></label></div>'
         $('#'+this.workingDiv).append(query);
-        this.addIdData(id, 'checkbox');
-        return document.getElementById(id);
+        this.addIdData(params.id, 'checkbox');
+        return document.getElementById(params.id);
     }
-    addArrCheckbox(idPreFix, labelArr, cssArr){
+    addArrCheckbox(params){
         var retData = new Array;
-        for(var i = 0; i<labelArr.length; i++){
-            var css;
-            css = typeof(cssArr)=='object'? cssArr[i] : cssArr;
-            retData[i]=this.addCheckbox(
-                idPreFix + i,
-                labelArr[i],
-                css
-            ); 
+        for(var i = 0; i<params.label.length; i++){
+            var vcss;
+            vcss = typeof(params.css)=='object'? params.css[i] : params.css;
+            retData[i]=this.addCheckbox({
+                id: params.id + i,
+                label: params.label[i],
+                css: vcss
+            }); 
         }
         return retData; 
     }
-    addSubmitButton(id, text, icon, css){
+    addSubmitButton(params){
         var query;
-        query = '<div class="'+css+'"><hr><a class="waves-effect waves-light btn" id="'+id+'"><i class="material-icons right">'+icon+'</i>'+text+'</a></div>';
+        query = '<div class="'+params.wrapperCSS+'"><hr><a class="waves-effect waves-light btn '+params.css+'" id="'+params.id+'"><i class="material-icons right">'+params.icon+'</i>'+params.text+'</a></div>';
         $('#'+this.workingDiv+'-footer').append(query);
-        return document.getElementById(id);
+        return document.getElementById(params.id);
     }
-    addDynamicButton(id,text,icon,css){
-        var query;
-        query = '<div class="'+css+'"><div><a class="waves-effect waves-light btn" id="'+id+'"><i class="material-icons right">'+icon+'</i>'+text+'</a></div></div>';
-        $('#'+this.workingDiv).append(query);
-        this.addIdData(id, 'button');
-        return document.getElementById(id);
+    addDynamicButton(params){
+        var query, parent;
+        query = '<div class=""><div class="'+params.wrapperCSS+' "><a class="waves-effect waves-light btn '+params.css+'" id="'+params.id+'"><i class="material-icons right">'+params.icon+'</i>'+params.text+'</a></div></div>';
+        parent = params.parent==null?this.workingDiv:params.parent;
+        $('#'+parent).append(query);
+        if(params.parent==null)
+        this.addIdData(params.id, 'button');    
+        return document.getElementById(params.id);
     }
-    addSection(id, html, css){
-        var query;
-        query = '<div class ="'+css+'"><div><div id="'+id+'">'+html+'</div></div></div>';
+    addSection(params){
+        var query, parent;
+        query = '<div class ="'+params.css+'"><div><div id="'+params.id+'">'+params.html+'</div></div></div>';
         //console.log(query);
-        $('#'+this.workingDiv).append(query);
-        this.addIdData(id, 'html');
+        parent = params.parent==null?this.workingDiv:params.parent;
+        //console.log(parent);
+        $('#'+parent).append(query);
+        if(params.parent==null)
+        this.addIdData(params.id, 'html');
     }
     getCheckboxValue(id){
         return id.checked;
@@ -181,6 +187,37 @@ class easyForms{
         return retData;
 
     }
+    
+    updateCart(params){
+        var heading = params.heading;
+        var desc = params.desc;
+        document.getElementById(params.parent).innerHTML = '';  
+        this.itemsInCart.forEach((item, i) => {
+            this.addSection({
+                css: params.css,
+                html: '<h6>'+item[heading]+'</h6><h7>'+item[desc[0]]+'</h7><br>'+item[desc[1]],
+                id: 'cart'+i,
+                parent: params.parent
+            });
+            if(params.clearButton == true){
+                this.delCartItemButtons[i] = this.addDynamicButton({
+                    id:'deleteCartItem'+i,
+                    css: params.clearButtonCSS,
+                    icon: params.clearButtonIcon,
+                    parent: 'cart'+i,
+                    wrapperCSS: params.clearButtonWrapperCSS
+                });
+            }
+        }); 
+          
+    }
+
+    initbutton(item){
+        item.button.onclick = function(){
+            easyForms.prototype.removeFromCart({index:item.i});
+        }
+    }
+    
     isFormComplete(){
         var allData = this.getId();
         var ret = true;
@@ -213,6 +250,34 @@ class easyForms{
             }
         }
         return retObj;
+    }
+
+    addToCart(){
+        this.itemsInCart.push(this.getAllData());
+        this.resetForm();
+    }
+    
+    resetForm(){
+        document.getElementById(this.formDiv).reset();
+    }
+    askGender(params){
+        return this.addSelect(
+            params.id,
+            [
+                'female',
+                'male',
+                'others',
+                'Do not wish to disclose'
+            ],
+            [
+                'female',
+                'male',
+                'others',
+                'Do not wish to disclose'
+            ],
+            params.label,
+            params.css
+        );
     }
         
 }
